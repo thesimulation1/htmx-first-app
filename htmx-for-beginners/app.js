@@ -33,14 +33,20 @@ const db = new sqlite3.Database('books.db', (err) => {
       if (err) {
         console.error('Error creating table:', err.message);
       } else {
-        // Insert initial data
-        const insertBook = 'INSERT INTO books (title, author) VALUES (?, ?)';
-        BOOKS_DATA.forEach(book => {
-          db.run(insertBook, [book.title, book.author], (err) => {
-            if (err) {
-              console.error('Error inserting data:', err.message);
-            }
-          });
+        // Insert initial data only if the table is empty
+        db.get('SELECT COUNT(*) AS count FROM books', (err, row) => {
+          if (err) {
+            console.error('Error counting books:', err.message);
+          } else if (row.count === 0) {
+            const insertBook = 'INSERT INTO books (title, author) VALUES (?, ?)';
+            BOOKS_DATA.forEach(book => {
+              db.run(insertBook, [book.title, book.author], (err) => {
+                if (err) {
+                  console.error('Error inserting data:', err.message);
+                }
+              });
+            });
+          }
         });
       }
     });
@@ -63,13 +69,19 @@ app.get('/books', (req, res) => {
 });
 
 app.post('/books', (req, res) => {
-  const { title, author, price } = req.body;
+  const { title, author } = req.body;
   const insertBook = 'INSERT INTO books (title, author) VALUES (?, ?)';
   db.run(insertBook, [title, author], function (err) {
     if (err) {
       res.status(500).send('Error adding book');
     } else {
-      res.redirect('/books');
+      db.get('SELECT * FROM books WHERE id = ?', [this.lastID], (err, row) => {
+        if (err) {
+          res.status(500).send('Error fetching new book');
+        } else {
+          res.send(createBookTemplate(row));
+        }
+      });
     }
   });
 });
@@ -92,7 +104,7 @@ app.delete('/books/:id', (req, res) => {
       res.status(500).send('Error deleting book');
     } else {
       //console.log(res.sendStatus(200));
-      //res.sendStatus(200);
+      res.status(200).send('');
     }
   });
 });
