@@ -3,7 +3,16 @@ import createHomepageTemplate from './views/index.js';
 import createListTemplate from './views/list.js';
 import createBookTemplate from './views/book.js';
 import createEditFormTemplate from './views/edit.js';
+
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
+
 import BOOKS_DATA from './data/data.js';
+
+const dbPromise = open({
+  filename: 'books.db',
+  driver: sqlite3.Database
+})
 
 // create app
 const app = express();
@@ -69,7 +78,12 @@ app.post('/books/search', (req, res) => {
   res.send(createListTemplate(BOOKS_DATA.filter(b => b.title.toLowerCase().includes(text))));
 });
 
-// listen to port
-app.listen(3000, () => {
-  console.log('App listening on port 3000');
-});
+const setup = async () => {
+  const db = await dbPromise
+  await db.migrate()
+  app.listen(3000, () => {
+    console.log('App listening on port 3000');
+  })
+}
+
+setup();
