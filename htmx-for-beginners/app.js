@@ -3,6 +3,7 @@ import createHomepageTemplate from './views/index.js';
 import createListTemplate from './views/list.js';
 import createBookTemplate from './views/book.js';
 import createEditFormTemplate from './views/edit.js';
+import createGraphTemplate from './views/graph.js';
 
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
@@ -28,7 +29,10 @@ const db = new sqlite3.Database('books.db', (err) => {
     db.run(`CREATE TABLE IF NOT EXISTS books (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT,
-      author TEXT
+      author TEXT,
+      price REAL,
+      year INTEGER,
+      pages INTEGER
     )`, (err) => {
       if (err) {
         console.error('Error creating table:', err.message);
@@ -38,9 +42,9 @@ const db = new sqlite3.Database('books.db', (err) => {
           if (err) {
             console.error('Error counting books:', err.message);
           } else if (row.count === 0) {
-            const insertBook = 'INSERT INTO books (title, author) VALUES (?, ?)';
+            const insertBook = 'INSERT INTO books (title, author, price, year, pages) VALUES (?, ?, ?, ?, ?)';
             BOOKS_DATA.forEach(book => {
-              db.run(insertBook, [book.title, book.author], (err) => {
+              db.run(insertBook, [book.title, book.author, book.price, book.year, book.pages], (err) => {
                 if (err) {
                   console.error('Error inserting data:', err.message);
                 }
@@ -58,6 +62,31 @@ app.get('/', (req, res) => {
   res.send(createHomepageTemplate());
 });
 
+//Show Book Data Routes
+
+app.get('/graph', (req, res) => {
+  db.all('SELECT * FROM books', [], (err, rows) => {
+    if (err) {
+      res.status(500).send('Error fetching book data for graph');
+    } else {
+      const data = {
+        labels: rows.map(row => row.title),
+        values: rows.map(row => row.price)
+      };
+      try {
+        res.send(createGraphTemplate(data));
+        console.log(data);
+      } catch (error) {
+        res.status(500).send('Error generating graph template');
+      }
+    }
+  });
+});
+
+
+
+//Show Book Routes
+
 app.get('/books', (req, res) => {
   db.all('SELECT * FROM books', [], (err, rows) => {
     if (err) {
@@ -69,9 +98,9 @@ app.get('/books', (req, res) => {
 });
 
 app.post('/books', (req, res) => {
-  const { title, author } = req.body;
-  const insertBook = 'INSERT INTO books (title, author) VALUES (?, ?)';
-  db.run(insertBook, [title, author], function (err) {
+  const { title, author, price, year, pages } = req.body;
+  const insertBook = 'INSERT INTO books (title, author, price, year, pages) VALUES (?, ?, ?, ?, ?)';
+  db.run(insertBook, [title, author, price, year, pages], function (err) {
     if (err) {
       res.status(500).send('Error adding book');
     } else {
@@ -110,11 +139,11 @@ app.delete('/books/:id', (req, res) => {
 });
 
 app.put('/books/:id', (req, res) => {
-  const { title, author } = req.body;
+  const { title, author, price, year, pages } = req.body;
   const { id } = req.params;
 
-  const updateBook = 'UPDATE books SET title = ?, author = ? WHERE id = ?';
-  db.run(updateBook, [title, author, id], function (err) {
+  const updateBook = 'UPDATE books SET title = ?, author = ?, price =?, year = ?, pages = ? WHERE id = ?';
+  db.run(updateBook, [title, author, price, year, pages, id], function (err) {
     if (err) {
       res.status(500).send('Error updating book');
     } else {

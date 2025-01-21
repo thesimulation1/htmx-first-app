@@ -4,6 +4,7 @@ const createHomepageTemplate = () => /*html*/`
     <head>
       <title>My Reading List</title>
       <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
       <script>console.log("Node.js + SQLite")</script>
       <link rel="stylesheet" href="/styles.css">
     </head>
@@ -29,6 +30,10 @@ const createHomepageTemplate = () => /*html*/`
           <button hx-get="/books" hx-target=".book-list" hx-trigger="dblclick">Show Books</button>
         </div>
 
+        <div class="book-graph">
+          <button hx-get="/graph" hx-target=".book-graph" hx-trigger="dblclick">Show Graph</button>
+        </div>
+
         <div class="add-book-form">
           <h2>What do you want to read?</h2>
           <form
@@ -51,6 +56,28 @@ const createHomepageTemplate = () => /*html*/`
               type="text"
               required
             />
+            <input 
+              id="year" 
+              name="year"
+              placeholder="year" 
+              type="text"
+              required
+            />
+            <input 
+              id="price" 
+              name="price"
+              placeholder="price" 
+              type="text"
+              required
+            />
+            <input 
+              id="pages" 
+              name="pages"
+              placeholder="pages" 
+              type="text"
+              required
+            />
+            
             <button>Add</button>
           </form>
         </div>

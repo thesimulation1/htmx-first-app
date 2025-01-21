@@ -12,6 +12,24 @@ const createEditFormTemplate = (book) => /*html*/`
       type="text" 
       value="${book.author}" 
     />
+    <input 
+      name="year"
+      placeholder="year" 
+      type="text" 
+      value="${book.year}" 
+    />
+    <input 
+      name="price"
+      placeholder="price" 
+      type="text" 
+      value="${book.price}" 
+    />
+    <input 
+      name="pages"
+      placeholder="pages" 
+      type="text" 
+      value="${book.pages}" 
+    />
     <button>Confirm</button>
   </form>
 `;

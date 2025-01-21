@@ -7,6 +7,9 @@ const createBookTemplate = (book) => /*html*/`
     >
       <h3>${book.title}</h3>
       <p>${book.author}</p>
+      <p>${book.year}</p>
+      <p>${book.price}</p>
+      <p>${book.pages}</p>
     </div>
     <button
       hx-delete="/books/${book.id}" 
