@@ -9,6 +9,7 @@ import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
 import BOOKS_DATA from './data/data.js';
+import createTestTemplate from './views/test.js';
 
 
 
@@ -83,6 +84,11 @@ app.get('/graph', (req, res) => {
   });
 });
 
+//test navigation bar routing
+
+app.get('/test', (req, res) => {
+  res.send(createTestTemplate());
+});
 
 
 //Show Book Routes

@@ -1,3 +1,7 @@
+import createSidebarTemplate from './sidebar.js';
+
+
+
 const createHomepageTemplate = () => /*html*/`
   <!DOCTYPE html>
   <html>
@@ -8,7 +12,8 @@ const createHomepageTemplate = () => /*html*/`
       <script>console.log("Node.js + SQLite")</script>
       <link rel="stylesheet" href="/styles.css">
     </head>
-    <body>
+    <body id="main">
+      ${createSidebarTemplate()}
       <header>
         <h1>My Reading List</h1>
       </header>
