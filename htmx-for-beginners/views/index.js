@@ -46,6 +46,7 @@ const createHomepageTemplate = () => /*html*/`
             hx-target=".book-list ul" 
             hx-swap="beforeend" 
             hx-on::after-request="document.querySelector('form').reset()"
+            onsubmit="return confirm('Do you want to submit?')"
           >
             <input 
               id="title" 

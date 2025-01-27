@@ -1,5 +1,5 @@
 const createEditFormTemplate = (book) => /*html*/`
-  <form hx-put="/books/${book.id}" hx-target="closest li" hx-swap="outerHTML">
+  <form hx-put="/books/${book.id}" hx-target="closest li" hx-swap="outerHTML" onsubmit="return confirm('Do you want to submit?')">
     <input 
       name="title"
       placeholder="title" 

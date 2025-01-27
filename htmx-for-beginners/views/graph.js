@@ -14,8 +14,14 @@ const createGraphTemplate = (data) => {
           <h1>Book Graph</h1>
           <canvas id="bookChart" width="400" height="200"></canvas>
           <script>
+          try {
+            Chart.getChart('myCyhart').destroy()
+          }
+          catch {
+          // doesn't exist yet
+          
               const ctx = document.getElementById('bookChart').getContext('2d');
-              const bookChart = new Chart(ctx, {
+              new Chart(ctx, {
                 type: 'bar',
                 data: {
                   labels: ${JSON.stringify(data.labels)},
@@ -35,6 +41,7 @@ const createGraphTemplate = (data) => {
                   }
                 }
               });
+            };
           </script>
         </body>
       </html>

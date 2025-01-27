@@ -1,6 +1,7 @@
 import createSidebarTemplate from './sidebar.js';
+import createGraphTemplate from './graph.js';
 
-const createTestTemplate = () => /*html*/`
+const createTestTemplate = (data) => /*html*/`
 <!DOCTYPE html>
   <html>
     <head>
@@ -16,7 +17,10 @@ const createTestTemplate = () => /*html*/`
         <h1>My Reading List</h1>
       </header>
 
-     <h1>This is a test navigatoin</h1>
+     <h1>This is a test navigation</h1>
+     <div class="book-graph">
+    ${createGraphTemplate(data)}
+</div>
     </body>
   </html>
 

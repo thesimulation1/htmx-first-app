@@ -13,7 +13,11 @@ const createSidebarTemplate = () => /*html*/`
         hx-target="#main" 
         hx-on::before-request="closeNav()"
         >Test</a>
-        <a href="#">Clients</a>
+        <a hx-get="/home" 
+        hx-push-url="true" 
+        hx-target="#main" 
+        hx-on::before-request="closeNav()"
+        >Welcome</a>
         <a href="#">Contact</a>
       </div>
 

@@ -4,6 +4,7 @@ import createListTemplate from './views/list.js';
 import createBookTemplate from './views/book.js';
 import createEditFormTemplate from './views/edit.js';
 import createGraphTemplate from './views/graph.js';
+import createWelcomePageTemplate from './views/welcomepage.js';
 
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
@@ -63,6 +64,10 @@ app.get('/', (req, res) => {
   res.send(createHomepageTemplate());
 });
 
+app.get('/home',(req,res) => {
+  res.send(createWelcomePageTemplate());
+});
+
 //Show Book Data Routes
 
 app.get('/graph', (req, res) => {
@@ -87,7 +92,17 @@ app.get('/graph', (req, res) => {
 //test navigation bar routing
 
 app.get('/test', (req, res) => {
-  res.send(createTestTemplate());
+  db.all('SELECT title, price FROM books', [], (err, rows) => {
+    if (err) {
+      res.status(500).send('Error fetching book data for graph');
+    } else {
+      const data = {
+        labels: rows.map(row => row.title),
+        values: rows.map(row => row.price)
+      };
+      res.send(createTestTemplate(data));
+    }
+  });
 });
 
 
@@ -96,7 +111,7 @@ app.get('/test', (req, res) => {
 app.get('/books', (req, res) => {
   db.all('SELECT * FROM books', [], (err, rows) => {
     if (err) {
-      res.status(500).send('Error fetching books');
+      res.status(500).send('Error fetching books');z
     } else {
       res.send(createListTemplate(rows));
     }
